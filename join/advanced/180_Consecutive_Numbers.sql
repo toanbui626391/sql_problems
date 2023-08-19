@@ -5,6 +5,7 @@ problem:
     => list num which apprear at least 3 time consecutively
 strategy
     filter row which mark 3 consecutive id with lead and lag
+    usind distince because we will have multiple row meet filter condition
 */
 with temp as (
     select *
