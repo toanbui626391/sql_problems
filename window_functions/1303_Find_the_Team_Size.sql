@@ -1,0 +1,8 @@
+/*
+problem:
+    employee (employee_id, team_id)
+    => find the team size of each employee
+*/
+select employee_id
+, count(*) over(partition by team_id) as team_size
+from employee

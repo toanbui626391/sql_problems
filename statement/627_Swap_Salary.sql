@@ -6,5 +6,5 @@ strategy
     using update statement
         update statement do not have from keyword. Just update table_name
 */
-UPDATE salary
-SET sex = CASE WHEN sex = 'm' THEN 'f' ELSE 'm' END;
+update salary
+set sex = if(sex="m", "f", "m")

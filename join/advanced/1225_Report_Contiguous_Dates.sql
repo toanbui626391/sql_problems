@@ -11,24 +11,29 @@ strategy
     rnb2 - rnb1 will mark for each continuous tate
     group by rnb2-rnb2, state and compute min(date), max(date) to find start_date and end_date
 */
-WITH tb1 AS (
-    SELECT fail_date AS date, 'failed' AS s
-    FROM Failed
-    UNION
-    SELECT success_date AS date, 'succeeded' AS s
-    FROM Succeeded
+/*
+problem:
+    failed (fail_date)
+    succeeded (success_date)
+    => find start_date, end_date for period_state
+strategy
+*/
+with temp as (
+    select fail_date as date, "failed" as state from failed 
+    union all
+    select success_date as date, "succeeded" as state from succeeded
 ),
-tb2 AS (
-    SELECT *, 
-        ROW_NUMBER() OVER (PARTITION BY s ORDER BY date) AS r,
-        ROW_NUMBER() OVER (ORDER BY date) AS r2
-    FROM tb1
-    WHERE Year(date) = 2019
+temp2 as (
+    select *
+    , row_number() over(order by date) as rnb
+    , row_number() over(partition by state order by date) as rnb2
+    from temp
+    where date between date("2019-01-01") and date("2019-12-31")
 )
-
--- contiguous dates with same period state share the same r2-r,
--- so in a group with same r2-4, the smallest date is start date and the largest date is end date
-SELECT s AS period_state, MIN(date) AS start_date, MAX(date) AS end_date
-FROM tb2
-GROUP BY r2-r, s
-ORDER BY start_date;
+select 
+state as period_state
+, min(date) as start_date
+, max(date) as end_date
+from temp2
+group by rnb-rnb2, state
+order by start_date
