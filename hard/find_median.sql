@@ -5,6 +5,8 @@ solution:
   filter num with middle point
     total_e/2 is the middle point of the numbers
     totl_e/2 >= cum_e - frequency and total_e/2 <= cum_e
+learning:
+  using window function sum() to compute cumulative sum
 */
 -- compu cumulative element
 with temp as (
